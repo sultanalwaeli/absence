@@ -1,450 +1,148 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
-<title>رصد الغياب - تطبيق الويب</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>نظام رصد الغياب</title>
 <style>
-:root{
-  --brand:#115e59; --brand2:#0b8a6a; --ink:#0b1220; --muted:#5b6577; --stroke:#e6e9ef;
-  --radius:16px; --bar:84px; --font:17px; --touch:44px;
-}
-*{box-sizing:border-box}
-body{margin:0;font-family:"Noto Naskh Arabic","Segoe UI",Tahoma,Arial,sans-serif;line-height:1.6;background:#0e1615;color:#0b1220;font-size:var(--font);-webkit-tap-highlight-color:transparent}
-.container{max-width:100%;margin:0 auto;padding:12px 10px calc(var(--bar) + env(safe-area-inset-bottom) + 10px)}
-.hero{border-radius:18px;color:#fff;padding:14px;background:linear-gradient(135deg,rgba(17,94,89,.96),rgba(11,138,106,.96));box-shadow:0 12px 30px rgba(0,0,0,.15);margin-bottom:12px}
-.hero-inner{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}
-.badge{background:rgba(15,23,42,.92);color:#fff;border-radius:20px;padding:8px 12px;font-weight:700;font-size:14px;white-space:nowrap}
-.card{background:#fff;border:1px solid var(--stroke);border-radius:var(--radius);padding:12px;margin-bottom:10px;box-shadow:0 4px 12px rgba(0,0,0,.08)}
-.grid2,.grid3{display:grid;gap:8px;margin-bottom:8px}
-.grid2{grid-template-columns:1fr 1fr}
-.grid3{grid-template-columns:1fr 1fr 1fr}
-@media(max-width:768px){.grid3{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}:root{--font:16px}}
-.input,.select,.btn{padding:14px;border:2px solid var(--stroke);border-radius:14px;background:#fff;font:inherit;font-size:var(--font);min-height:var(--touch);width:100%}
-.select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%235b6577' d='M6 8L2 4h8z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 14px center;background-size:12px;padding-left:40px}
-.btn{border:none;font-weight:700;cursor:pointer;text-align:center;transition:.2s}
-.btn:disabled{opacity:.6;cursor:not-allowed}
-.primary{color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand2))}
-.secondary{background:#f8fafc;color:var(--ink)}
-.warning{color:#fff;background:linear-gradient(135deg,#f59e0b,#d97706)}
-.danger{color:#fff;background:#dc2626}
-.small{font-size:13px;color:#64748b}
-.list{max-height:50vh;overflow-y:auto;margin-top:8px;border:1px solid var(--stroke);border-radius:12px}
-.item{display:flex;align-items:center;gap:10px;padding:12px;border-bottom:1px solid #f1f5f9}
-.item:last-child{border-bottom:none}
-.item .tag{font-size:12px;border-radius:20px;padding:4px 8px;border:1px solid var(--stroke);white-space:nowrap}
-input[type="checkbox"]{transform:scale(1.25);accent-color:var(--brand);margin:0}
-.status-list{display:flex;flex-wrap:wrap;gap:6px}
-.pill{padding:8px 12px;border-radius:20px;border:2px solid var(--stroke);background:#fff;cursor:pointer;font-size:14px;transition:.2s}
-.pill.taken{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;border-color:transparent}
-.sticky{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:2px solid var(--stroke);padding:10px;display:flex;gap:8px;z-index:1000;box-shadow:0 -8px 20px rgba(0,0,0,.1);flex-wrap:wrap;justify-content:space-between}
-.actions{display:flex;gap:8px;flex-wrap:wrap;flex:1}
-.toast{position:fixed;bottom:calc(var(--bar)+76px);left:50%;transform:translateX(-50%);background:#0f172a;color:#fff;padding:14px 18px;border-radius:12px;display:none;z-index:1001;font-size:15px;max-width:94%;text-align:center}
-.success{background:linear-gradient(135deg,#10b981,#059669);font-weight:bold}
-.loading-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;justify-content:center;align-items:center;z-index:1200}
-.loading-box{background:#fff;padding:26px;border-radius:14px;min-width:220px;box-shadow:0 15px 35px rgba(0,0,0,.3);text-align:center}
-.spinner{border:4px solid #eee;border-top:4px solid var(--brand);border-radius:50%;width:46px;height:46px;animation:spin 1s linear infinite;margin:0 auto 12px}
-@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
-.instructions{background:#f0f9ff;border:1px solid #bae6fd;border-radius:12px;padding:12px;margin-bottom:12px;font-size:14px;color:#0369a1}
-.progress{display:flex;gap:8px;margin-top:8px}
-.kpi{flex:1;background:#fff;border:1px solid var(--stroke);border-radius:12px;padding:10px;text-align:center}
-.kpi .v{font-weight:800;font-size:18px}
-.kpi .t{font-size:12px;color:#64748b}
-.bar{height:8px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin-top:8px}
-.bar > div{height:100%;background:linear-gradient(90deg,#10b981,#0ea5e9)}
-.password-modal{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;justify-content:center;align-items:center;z-index:1300}
-.password-content{background:#fff;padding:30px;border-radius:18px;min-width:300px;text-align:center;box-shadow:0 20px 40px rgba(0,0,0,.35)}
-.password-content h3{margin:0 0 10px 0;color:#dc2626;font-size:19px}
-.password-input{width:100%;padding:14px;border:2px solid #e5e7eb;border-radius:12px;font-size:18px;text-align:center;margin-bottom:12px;font-family:monospace;letter-spacing:2px}
-.password-actions{display:flex;gap:8px}
-.password-actions button{flex:1;padding:12px;border:none;border-radius:10px;font-weight:700;cursor:pointer}
-.password-confirm{background:#dc2626;color:#fff}
-.password-cancel{background:#6b7280;color:#fff}
+body{font-family:"Noto Naskh Arabic",sans-serif;background:#f4f6f8;color:#222;margin:0;padding:20px}
+.container{max-width:900px;margin:auto;background:#fff;border-radius:16px;box-shadow:0 2px 10px rgba(0,0,0,.1);padding:20px}
+h1{text-align:center;color:#0b806a}
+button,select,textarea{font-family:inherit;font-size:16px}
+button{cursor:pointer;padding:10px 20px;border:none;border-radius:10px}
+button.primary{background:#0b806a;color:#fff}
+button.secondary{background:#eee}
+textarea{width:100%;border:1px solid #ddd;border-radius:10px;padding:10px}
+select{padding:10px;border-radius:8px;border:1px solid #ccc;width:100%}
+.list{margin-top:15px}
+.item{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-bottom:1px solid #eee}
+input[type=checkbox]{transform:scale(1.2);margin-left:10px}
+.footer{text-align:center;margin-top:25px;font-size:14px;color:#777}
+.progress{display:flex;gap:10px;margin-top:10px}
+.kpi{flex:1;background:#fafafa;border:1px solid #eee;border-radius:10px;text-align:center;padding:10px}
+.kpi .val{font-weight:700;font-size:18px}
+.kpi .label{font-size:13px;color:#666}
+.loading{display:none;text-align:center;font-weight:bold;color:#0b806a}
 </style>
 </head>
 <body>
 <div class="container">
+<h1>📋 نظام رصد الغياب</h1>
 
-  <!-- Overlay -->
-  <div id="loading" class="loading-overlay">
-    <div class="loading-box">
-      <div class="spinner"></div>
-      <div id="loadingMsg">جاري التحميل…</div>
-    </div>
-  </div>
+<div id="loading" class="loading">⏳ جاري التحميل...</div>
 
-  <!-- Password modal -->
-  <div id="pwModal" class="password-modal">
-    <div class="password-content">
-      <h3>🔒 تفريغ الوسوم</h3>
-      <p class="small">أدخل الرمز السري للمتابعة</p>
-      <input id="pwInput" type="password" maxlength="4" class="password-input" placeholder="****">
-      <div class="password-actions">
-        <button class="password-cancel" onclick="closePw()">إلغاء</button>
-        <button class="password-confirm" onclick="confirmClear()">تأكيد</button>
-      </div>
-    </div>
-  </div>
+<label>اختر الصف:</label>
+<select id="gradeSelect"></select>
 
-  <!-- Header -->
-  <div class="hero">
-    <div class="hero-inner">
-      <div style="flex:1;min-width:220px">
-        <div style="font-weight:800;font-size:20px;margin-bottom:6px">رصد الغياب</div>
-        <div class="small" style="opacity:.95">اختر الصف → علِّم الغائبين → احفظ. الرقم الظاهر هو <b>رقم وليّ الأمر</b>.</div>
-        <div class="progress">
-          <div class="kpi">
-            <div id="kpiTotal" class="v">0</div><div class="t">الإجمالي</div>
-          </div>
-          <div class="kpi">
-            <div id="kpiPresent" class="v">0 (0%)</div><div class="t">حضور</div>
-            <div class="bar"><div id="barPresent" style="width:0%"></div></div>
-          </div>
-          <div class="kpi">
-            <div id="kpiAbsent" class="v">0 (0%)</div><div class="t">غياب</div>
-            <div class="bar"><div id="barAbsent" style="width:0%;background:linear-gradient(90deg,#f97316,#ef4444)"></div></div>
-          </div>
-        </div>
-      </div>
-      <div style="text-align:left">
-        <span id="badge" class="badge">…</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- تعليمات سريعة -->
-  <div class="instructions">
-    <b>طريقة الاستخدام السريعة:</b>
-    <ul>
-      <li>اختر <b>الوضع</b> (الحصة الأولى / حالة طارئة) ثم اختر <b>الصف</b>.</li>
-      <li>حدد الغائبين فقط ثم اضغط <b>💾 حفظ</b> (يُسجل حضور للباقين تلقائيًا).</li>
-      <li>فعّل خيار <b>إرسال تلقائي</b> لإرسال رسالة لوليّ الأمر فور الحفظ (SMS/WhatsApp).</li>
-      <li>زر <b>🔄 إعادة التسجيل</b> يمسح تسجيل الصف ثم يعيد الحفظ بالصحيح.</li>
-    </ul>
-  </div>
-
-  <!-- متابعة الصفوف -->
-  <div class="card">
-    <div style="font-weight:700;margin-bottom:6px">متابعة الصفوف</div>
-    <div id="statusList" class="status-list"></div>
-    <div class="small">الأخضر = تم تسجيل الغياب لهذا الصف.</div>
-  </div>
-
-  <!-- أدوات -->
-  <div class="card">
-    <div class="grid3">
-      <select id="mode" class="select">
-        <option value="الحصة الأولى">الحصة الأولى</option>
-        <option value="حالة طارئة">حالة طارئة</option>
-      </select>
-
-      <div>
-        <select id="grade" class="select"><option value="">اختر الصف</option></select>
-        <div id="gradeState" class="small">—</div>
-      </div>
-
-      <div style="display:flex;flex-direction:column;gap:6px">
-        <label class="small" style="display:flex;align-items:center;gap:8px">
-          <input type="checkbox" id="showAll"> عرض الغائبين للجميع
-        </label>
-        <button id="btnShowAbs" class="btn secondary" type="button">عرض الغائبين</button>
-      </div>
-    </div>
-
-    <!-- صفحة الصف -->
-    <div id="gradeActions" class="grid2" style="display:none;margin-top:6px">
-      <button id="btnSave" class="btn primary" type="button">💾 حفظ الغياب المحدد</button>
-      <button id="btnRedo" class="btn warning" type="button">🔄 إعادة التسجيل</button>
-    </div>
-
-    <div class="grid2" style="margin-top:8px">
-      <input id="q" class="input" placeholder="ابحث بالاسم أو رقم وليّ الأمر…">
-      <label class="small" style="display:flex;align-items:center;gap:8px">
-        <input type="checkbox" id="checkAll"> تحديد/إلغاء الكل
-      </label>
-    </div>
-
-    <!-- قالب الإشعار + التحكم في القناة -->
-    <div class="grid2" style="margin-top:6px">
-      <div>
-        <textarea id="smsTemplate" class="input" rows="2" placeholder="قالب رسالة وليّ الأمر… (مثال: نحيطكم علمًا بغياب ابنكم اليوم. نأمل المتابعة)"></textarea>
-        <div style="display:flex;gap:10px;align-items:center;margin-top:8px">
-          <label class="small" style="display:flex;align-items:center;gap:6px">
-            القناة:
-            <select id="channel" class="select" style="padding:6px 10px;width:auto">
-              <option value="sms">SMS</option>
-              <option value="whatsapp">WhatsApp</option>
-            </select>
-          </label>
-          <label class="small" style="display:flex;align-items:center;gap:6px">
-            <input type="checkbox" id="autoNotify" checked> إرسال تلقائي بعد الحفظ
-          </label>
-        </div>
-      </div>
-      <button id="notifyAllBtn" class="btn secondary" type="button">📢 إرسال جماعي لغيّاب الصف</button>
-    </div>
-
-    <!-- القائمة -->
-    <div id="list" class="list" style="display:none"></div>
-    <div id="empty" class="small" style="text-align:center;padding:28px;color:#64748b">اختر الصف لتحميل الأسماء…</div>
-
-    <!-- الغائبون -->
-    <div id="absBox" class="card" style="display:none;margin-top:10px">
-      <div style="font-weight:700">الغائبون (<span id="absCount">0</span>)</div>
-      <div id="absContent" style="margin-top:6px"></div>
-    </div>
-  </div>
+<div style="margin-top:10px">
+<textarea id="smsTemplate" rows="2" placeholder="نص الرسالة لولي الأمر (مثال: نحيطكم علمًا بغياب ابنكم اليوم. نأمل المتابعة.)"></textarea>
 </div>
 
-<!-- شريط سفلي -->
-<div class="sticky">
-  <div class="actions">
-    <button id="btnClearAll" class="btn danger" type="button">🗑️ تفريغ الوسوم</button>
-    <button id="btnRefresh"  class="btn secondary" type="button">🔄 تحديث</button>
-  </div>
-  <div class="actions">
-    <button id="btnClearSel" class="btn secondary" type="button">❌ مسح التحديد</button>
-    <button id="btnFocus"    class="btn primary"   type="button">🔍 بحث</button>
-  </div>
+<div style="margin-top:8px">
+<label>القناة:</label>
+<select id="channel">
+  <option value="sms">SMS</option>
+  <option value="whatsapp">WhatsApp</option>
+</select>
+<label style="margin-right:10px"><input type="checkbox" id="autoNotify" checked> إرسال تلقائي بعد الحفظ</label>
 </div>
 
-<div id="toast" class="toast"></div>
+<div class="list" id="studentList"></div>
+
+<div class="progress">
+  <div class="kpi"><div id="total" class="val">0</div><div class="label">إجمالي الطلبة</div></div>
+  <div class="kpi"><div id="present" class="val">0</div><div class="label">الحضور</div></div>
+  <div class="kpi"><div id="absent" class="val">0</div><div class="label">الغياب</div></div>
+</div>
+
+<div style="margin-top:20px;text-align:center">
+  <button class="primary" onclick="save()">💾 حفظ الغياب</button>
+  <button class="secondary" onclick="reload()">🔄 تحديث</button>
+</div>
+
+<div class="footer">© مدرسة محمد بن سليمان الغافري</div>
+</div>
 
 <script>
-/* ============ أدوات صغيرة ============ */
-const qs=s=>document.querySelector(s), qsa=s=>document.querySelectorAll(s);
-const toast=(m,ok=false)=>{const t=qs('#toast');t.textContent=m;t.className='toast'+(ok?' success':'');t.style.display='block';setTimeout(()=>t.style.display='none',2600)}
-const showLoad=(m='جاري التحميل…')=>{qs('#loadingMsg').textContent=m;qs('#loading').style.display='flex'}
-const hideLoad=()=>qs('#loading').style.display='none'
+// رابط السكربت المنشور
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxNHFPxIo9_2dTSBbg9-A94Utc5VOwGzPa9EjiUhtevoB2WPuPZ-a_hb5dFh4F_6-MK/exec";
 
-/* ============ حالة واجهة ============ */
-let CURRENT=[], FILTERED=[], SELECTED=new Set();
+let students = [];
+let selected = new Set();
 
-/* ============ رسومات ============ */
-function kpi(stats){
-  const t=stats?.current?.total||0, a=stats?.current?.absent||0, p=Math.max(0,t-a);
-  const pp=t?Math.round((p/t)*100):0, pa=t?Math.round((a/t)*100):0;
-  qs('#kpiTotal').textContent=t;
-  qs('#kpiPresent').textContent=`${p} (${pp}%)`;
-  qs('#kpiAbsent').textContent=`${a} (${pa}%)`;
-  qs('#barPresent').style.width=pp+'%';
-  qs('#barAbsent').style.width=pa+'%';
+// تحميل الصفوف عند البداية
+window.onload = async () => {
+  toggleLoading(true);
+  const data = await (await fetch(SCRIPT_URL + "?action=init")).json().catch(()=>null);
+  toggleLoading(false);
+  if (!data || !data.grades) return alert("حدث خطأ في تحميل البيانات");
+  const sel = document.getElementById("gradeSelect");
+  sel.innerHTML = "<option value=''>اختر الصف</option>" + data.grades.map(g=>`<option>${g}</option>`).join("");
+  sel.onchange = loadStudents;
+};
+
+// تحميل الطلبة عند اختيار صف
+async function loadStudents(){
+  const grade = this.value;
+  if (!grade) return;
+  toggleLoading(true);
+  const res = await (await fetch(SCRIPT_URL + "?action=students&grade=" + encodeURIComponent(grade))).json().catch(()=>null);
+  toggleLoading(false);
+  if (!res) return alert("تعذر تحميل الطلبة");
+  students = res;
+  renderList();
 }
 
-function updateHeader(data){
-  if(!data) return;
-  const cur=data.current||{};
-  const t=cur.total||0, a=cur.absent||0, p=cur.present??(t-a);
-  qs('#badge').textContent=`${data.mode||'-'} | الإجمالي: ${t} | غائب: ${a} | حاضر: ${p}`;
-  if(data.statuses) renderStatuses(data.statuses);
-  kpi(data);
-}
-
-/* ============ تحميل الحالة الأولية ============ */
-document.addEventListener('DOMContentLoaded', ()=>{
-  showLoad('جاري تحميل التطبيق…');
-  google.script.run.withSuccessHandler(d=>{
-    qs('#mode').value=d?.mode||'الحصة الأولى';
-    const sel=qs('#grade');
-    const grades=d?.grades||[];
-    sel.innerHTML='<option value="">اختر الصف</option>'+grades.map(g=>`<option>${g}</option>`).join('');
-    renderStatuses(d?.statuses||[]);
-    updateHeader(d);
-    hideLoad();
-  }).withFailureHandler(_=>{toast('خطأ في التحميل');hideLoad()}).getInitial();
-});
-
-/* ============ متابعة الصفوف ============ */
-function renderStatuses(statuses){
-  const box=qs('#statusList'); box.innerHTML='';
-  statuses.forEach(st=>{
-    const pill=document.createElement('div');
-    pill.className='pill'+(st.taken?' taken':'');
-    pill.title=st.taken?'تم التسجيل':'لم يتم التسجيل';
-    pill.textContent=st.grade;
-    pill.onclick=()=>{qs('#grade').value=st.grade; onGradeChange()}
-    box.appendChild(pill);
-  })
-}
-
-/* ============ تغيير الوضع ============ */
-qs('#mode').addEventListener('change', e=>{
-  showLoad('تغيير الوضع…');
-  google.script.run.withSuccessHandler(res=>{
-    updateHeader(res);
-    if(qs('#grade').value){ loadGradeList() } else { hideLoad() }
-  }).withFailureHandler(_=>{toast('تعذّر تغيير الوضع');hideLoad()}).setMode(e.target.value);
-});
-
-/* ============ تغيير الصف ============ */
-qs('#grade').addEventListener('change', onGradeChange);
-function onGradeChange(){
-  const g=qs('#grade').value;
-  const actions=qs('#gradeActions');
-  actions.style.display=g?'grid':'none';
-  if(!g){qs('#list').style.display='none';qs('#empty').textContent='اختر الصف لتحميل الأسماء…';return;}
-  showLoad('تحميل بيانات الصف…');
-  google.script.run.withSuccessHandler(res=>{
-    updateHeader(res); loadGradeList();
-  }).withFailureHandler(_=>{toast('تعذّر تحميل الصف');hideLoad()}).ensureBaselineOnGrade(g);
-}
-
-function loadGradeList(){
-  const g=qs('#grade').value; if(!g) return;
-  google.script.run.withSuccessHandler(list=>{
-    CURRENT=Array.isArray(list)?list:[];
-    FILTERED=[...CURRENT]; SELECTED.clear(); qs('#checkAll').checked=false;
-    renderList(); updateSelButtons(); hideLoad();
-    const abs=CURRENT.filter(s=>s.state==='غائب').length;
-    qs('#gradeState').textContent=abs>0?`تم تسجيل الغياب سابقًا (${abs} غائب)`:'لم يتم تسجيل الغياب بعد';
-  }).withFailureHandler(_=>{toast('خطأ في تحميل الأسماء');hideLoad()}).getStudentsByGrade(g);
-}
-
-/* ============ قائمة الطلاب ============ */
+// عرض قائمة الطلبة
 function renderList(){
-  const list=qs('#list'), empty=qs('#empty'); list.innerHTML='';
-  if(!FILTERED.length){list.style.display='none';empty.style.display='block';empty.textContent='لا توجد نتائج';return;}
-  empty.style.display='none'; list.style.display='block';
-  FILTERED.forEach(st=>{
-    const row=document.createElement('div'); row.className='item';
-    const cb=document.createElement('input'); cb.type='checkbox'; cb.checked=SELECTED.has(st.row);
-    cb.onchange=()=>{cb.checked?SELECTED.add(st.row):SELECTED.delete(st.row); updateSelButtons();}
-    const info=document.createElement('div'); info.style.flex='1';
-    info.innerHTML=`<div style="font-weight:700">${st.name}</div><div class="small">الصف: ${st.grade} — هاتف وليّ الأمر: ${st.id||'-'}</div>`;
-    const tag=document.createElement('span'); tag.className='tag'; tag.textContent= st.state==='غائب'?'غائب':'حاضر';
-    const absent = st.state==='غائب';
-    tag.style.background=absent?'#fee2e2':'#d1fae5'; tag.style.color=absent?'#dc2626':'#065f46'; tag.style.borderColor=absent?'#fecaca':'#a7f3d0';
-    row.append(cb,info,tag); list.appendChild(row);
-  })
-}
-function updateSelButtons(){
-  const n=SELECTED.size;
-  qs('#btnSave').textContent = n?`💾 حفظ (${n} غائب)`: '💾 حفظ (الكل حاضر)';
-  qs('#btnRedo').textContent = n?`🔄 إعادة (${n} غائب)`: '🔄 إعادة (الكل حاضر)';
+  const list = document.getElementById("studentList");
+  list.innerHTML = "";
+  selected.clear();
+  students.forEach((st, i)=>{
+    const div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = `<label><input type="checkbox" onchange="toggle(${i}, this.checked)"> ${st.name}</label><span style="font-size:13px;color:#666">${st.id||''}</span>`;
+    list.appendChild(div);
+  });
+  updateStats();
 }
 
-/* ============ بحث وتحديد ============ */
-qs('#q').addEventListener('input', ()=>{
-  const q=qs('#q').value.trim().toLowerCase();
-  FILTERED= q? CURRENT.filter(s=> (s.name||'').toLowerCase().includes(q) || String(s.id||'').includes(q)) : [...CURRENT];
-  SELECTED.clear(); qs('#checkAll').checked=false; renderList(); updateSelButtons();
-});
-qs('#checkAll').addEventListener('change', e=>{
-  const ck=e.target.checked; (FILTERED||[]).forEach(s=>{ if(ck) SELECTED.add(s.row); else SELECTED.delete(s.row) });
-  renderList(); updateSelButtons();
-});
-
-/* ============ حفظ/إعادة ============ */
-qs('#btnSave').addEventListener('click', save);
-function save(){
-  const g=qs('#grade').value; if(!g) return toast('اختر صفًا أولًا');
-  const rows=[...SELECTED];
-  showLoad('تسجيل الغياب…');
-  google.script.run.withSuccessHandler(res=>{
-    if(res?.ok){
-      toast(`تم: ${res.presentCount||0} حاضر | ${res.absentCount||0} غائب`,true);
-      updateHeader(res);
-      // إشعار تلقائي
-      const auto=qs('#autoNotify').checked, body=(qs('#smsTemplate').value||'').trim() || 'نحيطكم علمًا بغياب ابنكم اليوم. نأمل المتابعة.', channel=qs('#channel').value||'sms';
-      if(auto && rows.length){
-        google.script.run.withSuccessHandler(r=>{
-          if(r?.ok){ const ok=(r.results||[]).filter(x=>x.ok).length; toast(`أُرسلت ${ok}/${r.count} رسالة`,true); }
-        }).notifyOnMark(g, rows, body, channel);
-      }
-      // تنظيف
-      CURRENT=[]; FILTERED=[]; SELECTED.clear(); qs('#list').style.display='none'; qs('#empty').style.display='block'; qs('#empty').textContent='✅ تم الحفظ. اختر صفًا آخر.';
-    }else{ toast('حدث خطأ في الحفظ'); }
-    hideLoad();
-  }).withFailureHandler(_=>{toast('تعذّر الحفظ');hideLoad()}).smartMarkGrade(g, rows);
+function toggle(i, checked){
+  if(checked) selected.add(i); else selected.delete(i);
+  updateStats();
 }
 
-qs('#btnRedo').addEventListener('click', ()=>{
-  const g=qs('#grade').value; if(!g) return toast('اختر صفًا أولًا');
-  if(!confirm('سيتم مسح تسجيل الصف ثم إعادة التسجيل وفق التحديد الحالي. متابعة؟')) return;
-  const rows=[...SELECTED]; showLoad('إعادة التسجيل…');
-  google.script.run.withSuccessHandler(res=>{
-    if(res?.ok){
-      toast(`تمت الإعادة: ${res.presentCount||0} حاضر | ${res.absentCount||0} غائب`,true);
-      updateHeader(res);
-      const auto=qs('#autoNotify').checked, body=(qs('#smsTemplate').value||'').trim() || 'نحيطكم علمًا بغياب ابنكم اليوم. نأمل المتابعة.', channel=qs('#channel').value||'sms';
-      if(auto && rows.length){
-        google.script.run.withSuccessHandler(r=>{
-          if(r?.ok){ const ok=(r.results||[]).filter(x=>x.ok).length; toast(`أُرسلت ${ok}/${r.count} رسالة`,true); }
-        }).notifyOnMark(g, rows, body, channel);
-      }
-      CURRENT=[]; FILTERED=[]; SELECTED.clear(); qs('#list').style.display='none'; qs('#empty').style.display='block'; qs('#empty').textContent='✅ تمت الإعادة. اختر صفًا آخر.';
-    }else{ toast('تعذّر إعادة التسجيل'); }
-    hideLoad();
-  }).withFailureHandler(_=>{toast('خطأ في إعادة التسجيل');hideLoad()}).redoGradeAttendance(g, rows);
-});
-
-/* ============ الغائبون ============ */
-qs('#btnShowAbs').addEventListener('click', ()=>{
-  const all=qs('#showAll').checked, box=qs('#absBox'), content=qs('#absContent'); showLoad('تحميل الغائبين…');
-  if(all){
-    google.script.run.withSuccessHandler(res=>{
-      const total=res?.total||0; qs('#absCount').textContent=total; content.innerHTML='';
-      if(!total){content.textContent='لا يوجد غياب في جميع الصفوف.'; box.style.display='block'; return hideLoad();}
-      (res?.byGrade||[]).forEach(g=>{
-        const h=document.createElement('div'); h.style.fontWeight='700'; h.style.marginTop='10px'; h.textContent=`${g.grade} — (${g.count})`; content.appendChild(h);
-        const ul=document.createElement('ul'); ul.style.paddingRight='20px'; g.names.forEach(s=>{const li=document.createElement('li'); li.textContent=`${s.name} — هاتف وليّ الأمر: ${s.id||'-'}`; ul.appendChild(li)}); content.appendChild(ul);
-      }); box.style.display='block'; hideLoad();
-    }).listAbsentsAll();
-  }else{
-    const g=qs('#grade').value; if(!g){toast('اختر الصف أولًا أو فعّل "عرض للجميع"'); return hideLoad();}
-    google.script.run.withSuccessHandler(res=>{
-      const c=res?.count||0; qs('#absCount').textContent=c; content.innerHTML='';
-      if(!c){content.textContent=`لا يوجد غياب في صف ${g}.`; box.style.display='block'; return hideLoad();}
-      const ul=document.createElement('ul'); ul.style.paddingRight='20px';
-      (res.names||[]).forEach(s=>{const li=document.createElement('li'); li.textContent=`${s.name} — هاتف وليّ الأمر: ${s.id||'-'}`; ul.appendChild(li)});
-      content.appendChild(ul); box.style.display='block'; hideLoad();
-    }).listAbsents(g);
-  }
-});
-
-/* ============ إجراءات عامة ============ */
-qs('#btnRefresh').addEventListener('click', ()=>{showLoad('تحديث الإحصاءات…'); google.script.run.withSuccessHandler(d=>{updateHeader(d); hideLoad()}).withFailureHandler(_=>hideLoad()).updateStats()});
-qs('#btnClearSel').addEventListener('click', ()=>{SELECTED.clear(); qs('#checkAll').checked=false; renderList(); updateSelButtons()});
-qs('#btnFocus').addEventListener('click', ()=>qs('#q').focus());
-
-/* ============ تفريغ الوسوم برمز ============ */
-qs('#btnClearAll').addEventListener('click', ()=>{qs('#pwInput').value=''; qs('#pwModal').style.display='flex'; setTimeout(()=>qs('#pwInput').focus(),50)});
-function closePw(){qs('#pwModal').style.display='none'}
-function confirmClear(){
-  const pass=qs('#pwInput').value||''; if(!pass) return toast('ادخل الرمز السري');
-  showLoad('التحقق من الرمز…');
-  google.script.run.withSuccessHandler(v=>{
-    if(!v.ok){toast('الرمز غير صحيح'); hideLoad(); return;}
-    showLoad('تفريغ الوسوم…');
-    google.script.run.withSuccessHandler(r=>{
-      closePw();
-      if(r.ok){
-        updateHeader(r);
-        qs('#list').style.display='none'; qs('#empty').style.display='block'; qs('#empty').textContent='تم التفريغ. اختر صفًا لبدء الرصد.';
-        toast('تم مسح جميع الوسوم',true);
-      }else{toast('تعذّر التفريغ')}
-      hideLoad();
-    }).clearAllMarks(pass);
-  }).withFailureHandler(_=>{toast('خطأ في التحقق');hideLoad()}).verifyPassword(pass);
+function updateStats(){
+  const t = students.length, a = selected.size, p = t - a;
+  document.getElementById("total").textContent = t;
+  document.getElementById("present").textContent = p;
+  document.getElementById("absent").textContent = a;
 }
-qs('#pwInput').addEventListener('keypress',e=>{if(e.key==='Enter') confirmClear()});
 
-/* ============ إرسال جماعي يدوي ============ */
-qs('#notifyAllBtn').addEventListener('click', ()=>{
-  const g=qs('#grade').value; if(!g) return toast('اختر الصف أولًا');
-  // نأتي بغياب الصف الحالي ثم نرسل لهم
-  showLoad('تحضير الإرسال الجماعي…');
-  google.script.run.withSuccessHandler(res=>{
-    const rows=(res||[]).filter(s=>s.state==='غائب').map(s=>s.row);
-    const body=(qs('#smsTemplate').value||'').trim() || 'نحيطكم علمًا بغياب ابنكم اليوم. نأمل المتابعة.';
-    const channel=qs('#channel').value||'sms';
-    if(!rows.length){toast('لا يوجد غياب في هذا الصف'); return hideLoad();}
-    google.script.run.withSuccessHandler(r=>{
-      if(r?.ok){const ok=(r.results||[]).filter(x=>x.ok).length; toast(`أُرسلت ${ok}/${r.count} رسالة`,true)}
-      hideLoad();
-    }).notifyOnMark(g, rows, body, channel);
-  }).withFailureHandler(_=>{toast('تعذّر جلب قائمة الصف');hideLoad()}).getStudentsByGrade(g);
-});
+// حفظ الغياب
+async function save(){
+  const grade = document.getElementById("gradeSelect").value;
+  if(!grade) return alert("اختر صفًا أولاً");
+  const rows = Array.from(selected).map(i=>students[i].row);
+  const body = document.getElementById("smsTemplate").value || "نحيطكم علمًا بغياب ابنكم اليوم. نأمل المتابعة.";
+  const channel = document.getElementById("channel").value;
+  const auto = document.getElementById("autoNotify").checked;
+  toggleLoading(true);
+  const res = await fetch(SCRIPT_URL + "?action=save",{
+    method:"POST",
+    body: JSON.stringify({grade,rows,body,channel,auto}),
+    headers:{"Content-Type":"application/json"}
+  }).then(r=>r.json()).catch(()=>null);
+  toggleLoading(false);
+  if(!res) return alert("حدث خطأ في الحفظ");
+  alert(`تم حفظ الغياب: ${res.current?.absent||0} غائب`);
+}
+
+// تحديث الصفحة
+function reload(){ location.reload(); }
+
+// تحميل وإخفاء
+function toggleLoading(show){ document.getElementById("loading").style.display = show?"block":"none"; }
 </script>
 </body>
 </html>
