@@ -24,10 +24,8 @@ body{
 .hero-inner{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}
 .badge{background:rgba(15,23,42,.9);color:#fff;border-radius:20px;padding:8px 12px;font-weight:700;font-size:14px;white-space:nowrap}
 .stats-comparison{background:rgba(255,255,255,.1);border-radius:12px;padding:10px;margin-top:8px;font-size:13px;border:1px solid rgba(255,255,255,.2)}
-.stats-comparison div{margin-bottom:4px}
 .card{background:#fff;border:1px solid var(--stroke);border-radius:var(--radius);padding:12px;margin-bottom:10px;box-shadow:0 4px 12px rgba(0,0,0,.08)}
-.grid2,.grid3{display:grid;gap:8px;margin-bottom:8px}
-.grid3{grid-template-columns:1fr 1fr 1fr}
+.grid3{display:grid;gap:8px;margin-bottom:8px;grid-template-columns:1fr 1fr 1fr}
 @media (max-width:768px){.grid3{grid-template-columns:1fr}:root{--font-size:16px}}
 .select,.btn{
   padding:14px;border:2px solid var(--stroke);border-radius:14px;background:#fff;
@@ -38,7 +36,6 @@ body{
 .primary{color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand2))}
 .secondary{background:#f8fafc;color:var(--ink)}
 .danger{color:#fff;background:#dc2626}
-.warning{color:#fff;background:linear-gradient(135deg,#f59e0b,#d97706)}
 .sticky{
   position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:2px solid var(--stroke);
   padding:10px;display:flex;gap:8px;z-index:1000;box-shadow:0 -8px 20px rgba(0,0,0,.1);flex-wrap:wrap;justify-content:space-between
@@ -55,8 +52,8 @@ body{
 @keyframes toastSlide{from{transform:translateX(-50%) translateY(100px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}
 .success-toast{background:linear-gradient(135deg,#10b981,#059669);animation:successToast .5s ease-out;font-weight:bold}
 @keyframes successToast{0%{transform:translateX(-50%) scale(.8);opacity:0}50%{transform:translateX(-50%) scale(1.05)}100%{transform:translateX(-50%) scale(1);opacity:1}}
-.list{max-height:50vh;overflow-y:auto;margin-top:8px;border:1px solid var(--stroke);border-radius:12px;transition:all .5s ease}
-.item{display:flex;align-items:center;gap:10px;padding:12px;border-bottom:1px solid #f1f5f9;transition:all .3s ease}
+.list{max-height:50vh;overflow-y:auto;margin-top:8px;border:1px solid var(--stroke);border-radius:12px}
+.item{display:flex;align-items:center;gap:10px;padding:12px;border-bottom:1px solid #f1f5f9}
 .item:last-child{border-bottom:none}
 .item .tag{font-size:12px;border-radius:20px;padding:4px 8px;border:1px solid var(--stroke);color:#475569;white-space:nowrap}
 input[type="checkbox"]{transform:scale(1.3);margin:0;accent-color:var(--brand)}
@@ -65,41 +62,47 @@ input[type="checkbox"]{transform:scale(1.3);margin:0;accent-color:var(--brand)}
 .pill.taken{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;border-color:transparent;animation:pulse 2s infinite}
 @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
 .small{font-size:14px;color:#64748b;margin-top:6px}
-@media (max-width:480px){.sticky{padding:8px}.actions-group{gap:6px}.actions-group .btn{min-width:120px;font-size:14px;padding:10px}}
 .loading{opacity:.7;pointer-events:none}
 .loading-overlay{
-  position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);
+  position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0, 0, 0,.7);
   display:flex;justify-content:center;align-items:center;z-index:2000;display:none
 }
 .loading-spinner{background:white;padding:30px;border-radius:16px;text-align:center;box-shadow:0 15px 35px rgba(0,0,0,.3);min-width:200px}
 .spinner{border:4px solid #f3f3f3;border-top:4px solid var(--brand);border-radius:50%;width:50px;height:50px;animation:spin 1s linear infinite;margin:0 auto 15px}
 @keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
-.empty-state{text-align:center;padding:40px 20px;color:#64748b;transition:all .5s ease;font-size:16px}
-.empty-state.success{background:#f0fdf4;border:2px solid #bbf7d0;border-radius:12px;color:#15803d;animation:successMessage .6s ease-out;font-weight:bold}
-@keyframes successMessage{0%{transform:scale(.9);opacity:0}50%{transform:scale(1.02)}100%{transform:scale(1);opacity:1}}
+.empty-state{text-align:center;padding:40px 20px;color:#64748b;font-size:16px}
+.empty-state.success{background:#f0fdf4;border:2px solid #bbf7d0;border-radius:12px;color:#15803d}
 .instructions{background:#f0f9ff;border:1px solid #bae6fd;border-radius:12px;padding:12px;margin-bottom:12px;font-size:14px;color:#0369a1}
 .instructions ul{margin:8px 0;padding-right:20px}
 .instructions li{margin-bottom:4px}
-.comparison-card{background:linear-gradient(135deg,#fef7ed,#fffbeb);border:2px solid #fed7aa;border-radius:var(--radius);padding:12px;margin-bottom:10px}
-.comparison-title{font-weight:700;color:#ea580c;margin-bottom:8px;font-size:16px}
-.comparison-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:14px}
-.stat-item{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #fed7aa}
-.stat-label{color:#57534e}
-.stat-value{font-weight:700}
-.diff-positive{color:#16a34a}.diff-negative{color:#dc2626}.diff-zero{color:#6b7280}
-.confetti{position:fixed;width:10px;height:10px;background:#ffd700;border-radius:50%;animation:confetti-fall 3s ease-in-out forwards;z-index:1002}
-@keyframes confetti-fall{0%{transform:translateY(-100px) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(360deg);opacity:0}}
-.password-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.8);display:flex;justify-content:center;align-items:center;z-index:3000;display:none}
-.password-content{background:white;padding:30px;border-radius:20px;text-align:center;box-shadow:0 20px 40px rgba(0,0,0,.3);min-width:300px;max-width:90%}
-.password-content h3{margin:0 0 20px 0;color:#dc2626;font-size:20px}
-.password-input{width:100%;padding:15px;border:2px solid #e5e7eb;border-radius:12px;font-size:18px;text-align:center;margin-bottom:15px;font-family:monospace;letter-spacing:2px}
-.password-input:focus{border-color:#dc2626;outline:none}
-.password-buttons{display:flex;gap:10px}
-.password-buttons button{flex:1;padding:12px;border:none;border-radius:10px;font-weight:bold;cursor:pointer}
-.password-confirm{background:#dc2626;color:white}
-.password-cancel{background:#6b7280;color:white}
-.grade-actions{display:flex;gap:8px;margin-top:10px}
-.grade-actions .btn{flex:1}
+
+/* بطاقة المقارنة الجديدة */
+.compare{
+  background:#fff7ed;border:1px solid #fed7aa;border-radius:16px;padding:12px;margin-bottom:10px
+}
+.compare-title{display:flex;align-items:center;gap:8px;font-weight:800;color:#9a3412}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:8px}
+@media (max-width:768px){.compare-grid{grid-template-columns:1fr}}
+.compare-card{
+  background:#fff;border:1px solid #fee2cc;border-radius:14px;padding:12px
+}
+.kpi{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;font-weight:700}
+.kpi .label{color:#6b7280;font-weight:600}
+.badge{
+  display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:800
+}
+.badge.green{background:#dcfce7;color:#166534;border:1px solid #86efac}
+.badge.red{background:#fee2e2;color:#991b1b;border:1px solid #fecaca}
+.badge.gray{background:#f3f4f6;color:#374151;border:1px solid #e5e7eb}
+.bar{height:10px;background:#f1f5f9;border-radius:999px;overflow:hidden}
+.bar-fill{height:100%;width:0%}
+.bar-fill.green{background:#10b981}
+.bar-fill.red{background:#ef4444}
+.diff-line{display:flex;align-items:center;gap:10px;margin-top:8px}
+.diff-val{font-weight:900}
+.diff-pos{color:#16a34a}
+.diff-neg{color:#dc2626}
+.diff-zero{color:#6b7280}
 </style>
 </head>
 <body>
@@ -113,7 +116,7 @@ input[type="checkbox"]{transform:scale(1.3);margin:0;accent-color:var(--brand)}
   </div>
 
   <!-- نافذة الرمز السري -->
-  <div id="passwordModal" class="password-modal">
+  <div id="passwordModal" class="password-modal" style="display:none">
     <div class="password-content">
       <h3>🔒 تفريغ الوسوم</h3>
       <p>أدخل الرمز السري للمتابعة:</p>
@@ -133,21 +136,37 @@ input[type="checkbox"]{transform:scale(1.3);margin:0;accent-color:var(--brand)}
       </div>
       <div style="text-align:left">
         <span class="badge" id="statsBadge">جاري التحميل...</span>
-        <div id="statsComparison" class="stats-comparison" style="display:none">
-          <div id="comparisonText"></div>
-        </div>
       </div>
     </div>
   </div>
 
-  <!-- بطاقة المقارنة -->
-  <div id="comparisonCard" class="comparison-card" style="display:none">
-    <div class="comparison-title">📊 مقارنة الإحصاءات</div>
-    <div class="comparison-stats">
-      <div class="stat-item"><span class="stat-label">الحصة الأولى:</span><span class="stat-value" id="morningAbsent">0 غائب</span></div>
-      <div class="stat-item"><span class="stat-label">الحالة الطارئة:</span><span class="stat-value" id="emergencyAbsent">0 غائب</span></div>
-      <div class="stat-item"><span class="stat-label">الفرق:</span><span class="stat-value" id="differenceAbsent">0</span></div>
-      <div class="stat-item"><span class="stat-label">الحالة:</span><span class="stat-value" id="differenceStatus">-</span></div>
+  <!-- مقارنة الإحصاءات الجديدة -->
+  <div id="comparisonCard" class="compare" style="display:none">
+    <div class="compare-title">📊 مقارنة إحصاءات الغياب</div>
+    <div class="compare-grid">
+      <!-- الحصة الأولى -->
+      <div class="compare-card">
+        <div class="kpi"><span class="label">الحصة الأولى</span><span id="kpi-mor-abs" class="badge red">0 غائب</span></div>
+        <div class="kpi"><span class="label">نسبة الغياب</span><span id="kpi-mor-rate" class="badge gray">0%</span></div>
+        <div class="bar"><div id="bar-mor" class="bar-fill red" style="width:0%"></div></div>
+        <div class="kpi" style="margin-top:8px"><span class="label">الحاضرون</span><span id="kpi-mor-pres" class="badge green">0</span></div>
+      </div>
+      <!-- الحالة الطارئة -->
+      <div class="compare-card">
+        <div class="kpi"><span class="label">الحالة الطارئة</span><span id="kpi-em-abs" class="badge red">0 غائب</span></div>
+        <div class="kpi"><span class="label">نسبة الغياب</span><span id="kpi-em-rate" class="badge gray">0%</span></div>
+        <div class="bar"><div id="bar-em" class="bar-fill red" style="width:0%"></div></div>
+        <div class="kpi" style="margin-top:8px"><span class="label">الحاضرون</span><span id="kpi-em-pres" class="badge green">0</span></div>
+      </div>
+      <!-- الفروقات -->
+      <div class="compare-card">
+        <div class="kpi"><span class="label">الفرق في الغياب</span><span id="kpi-diff-abs" class="badge gray">0</span></div>
+        <div class="kpi"><span class="label">الفرق في النسبة</span><span id="kpi-diff-rate" class="badge gray">0%</span></div>
+        <div class="diff-line">
+          <span class="label">الحالة:</span>
+          <span id="differenceStatus" class="diff-zero">متماثل</span>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -157,7 +176,7 @@ input[type="checkbox"]{transform:scale(1.3);margin:0;accent-color:var(--brand)}
     <ul>
       <li>اختر الصف من “متابعة الصفوف”.</li>
       <li>حدّد الطلاب الغائبين بمربعات الاختيار.</li>
-      <li>اضغط “💾 حفظ الغياب المحدد” أو “🔄 إعادة التسجيل”.</li>
+      <li>اضغط “💾 حفظ الغياب المحدد”.</li>
       <li>زر “عرض الغائبين” أسفل الشاشة يعرض جميع الغائبين لكل الصفوف.</li>
     </ul>
   </div>
@@ -180,14 +199,12 @@ input[type="checkbox"]{transform:scale(1.3);margin:0;accent-color:var(--brand)}
       <div>
         <button class="btn secondary" id="showAbsentsBtn" type="button" style="width:100%">عرض الغائبين</button>
       </div>
-      <!-- خانة ثالثة فارغة للمحافظة على الشبكة -->
       <div></div>
     </div>
 
-    <!-- أزرار خاصة بالصف -->
+    <!-- أزرار خاصة بالصف (بدون إعادة التسجيل) -->
     <div id="gradeActions" class="grade-actions" style="display:none">
       <button class="btn primary" id="saveBulkBtn" type="button">💾 حفظ الغياب المحدد</button>
-      <button class="btn warning" id="redoBtn" type="button">🔄 إعادة التسجيل</button>
     </div>
 
     <!-- قائمة الطلاب -->
@@ -202,7 +219,7 @@ input[type="checkbox"]{transform:scale(1.3);margin:0;accent-color:var(--brand)}
   </div>
 </div>
 
-<!-- الشريط السفلي: تفريغ الوسوم + عرض الغائبين -->
+<!-- الشريط السفلي -->
 <div class="sticky">
   <div class="actions-group">
     <button class="btn danger" id="clearMarksBtn" type="button">🗑️ تفريغ الوسوم</button>
@@ -216,18 +233,13 @@ input[type="checkbox"]{transform:scale(1.3);margin:0;accent-color:var(--brand)}
 // ====== إعداد API ======
 const API_URL = 'https://script.google.com/macros/s/AKfycbyNqFhY9RFxhW1joUSJ1as7PbDHCVAxpteZ0dmlBFuQf8llWU_XAu5KQMIjAu1nzPod/exec';
 
-// طلب POST مبسّط (x-www-form-urlencoded) لتفادي CORS المعقد
 async function apiCall(action, payload = {}) {
-  const body = new URLSearchParams({
-    action,
-    data: JSON.stringify(payload)
-  });
+  const body = new URLSearchParams({ action, data: JSON.stringify(payload) });
   const res = await fetch(API_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
     body
   });
-  // GAS قد يعيد JSON أو نص؛ نحاول القراءة بأمان
   const text = await res.text();
   try { return JSON.parse(text); } catch { return { ok:false, error:text }; }
 }
@@ -238,7 +250,6 @@ let CURRENT_LIST = [];
 let SELECTED_ROWS = new Set();
 let CURRENT_GRADE = '';
 
-// مؤثرات
 function playSuccessSound(){
   try{
     const ctx=new (window.AudioContext||window.webkitAudioContext)();
@@ -275,7 +286,6 @@ const showToast=(msg,isSuccess=false)=>{
   setTimeout(()=>{t.style.display='none'},3000);
 };
 
-// تحميل
 function showLoading(message='جاري تحميل البيانات...'){
   const ov=qs('#loadingOverlay');
   ov.querySelector('.loading-spinner div:last-child').textContent=message;
@@ -283,7 +293,47 @@ function showLoading(message='جاري تحميل البيانات...'){
 }
 function hideLoading(){qs('#loadingOverlay').style.display='none';document.body.classList.remove('loading')}
 
-// مقارنة وإحصاءات
+// ==== مقارنة وإحصاءات (نسخة محسّنة) ====
+function pct(num,den){return den>0? Math.round((num/den)*100):0;}
+function setBar(el, p, cls){ el.style.width = (p||0)+'%'; el.className = 'bar-fill '+cls; }
+
+function updateComparison(data){
+  const card=qs('#comparisonCard');
+  if(!(data.morning && data.emergency)){ card.style.display='none'; return; }
+
+  const m = data.morning, e = data.emergency;
+  const mRate = pct(m.absent, m.total), eRate = pct(e.absent, e.total);
+  const diffAbs = (m.absent||0) - (e.absent||0);
+  const diffRate = mRate - eRate;
+
+  // تعبئة الـKPIs
+  qs('#kpi-mor-abs').textContent = `${m.absent||0} غائب`;
+  qs('#kpi-mor-rate').textContent = `${mRate}%`;
+  qs('#kpi-mor-pres').textContent = `${m.present|| (m.total - m.absent) || 0}`;
+
+  qs('#kpi-em-abs').textContent = `${e.absent||0} غائب`;
+  qs('#kpi-em-rate').textContent = `${eRate}%`;
+  qs('#kpi-em-pres').textContent = `${e.present|| (e.total - e.absent) || 0}`;
+
+  // أشرطة النسبة
+  setBar(qs('#bar-mor'), mRate, 'red');
+  setBar(qs('#bar-em'), eRate, 'red');
+
+  // الفروقات
+  const diffAbsEl = qs('#kpi-diff-abs');
+  const diffRateEl = qs('#kpi-diff-rate');
+  const statusEl = qs('#differenceStatus');
+
+  diffAbsEl.textContent = (diffAbs>0? '+'+diffAbs : diffAbs);
+  diffRateEl.textContent = (diffRate>0? '+'+diffRate : diffRate) + '%';
+
+  if(diffAbs>0){ statusEl.textContent='زيادة في الحصة الأولى'; statusEl.className='diff-pos'; }
+  else if(diffAbs<0){ statusEl.textContent='زيادة في الحالة الطارئة'; statusEl.className='diff-neg'; }
+  else { statusEl.textContent='متماثل'; statusEl.className='diff-zero'; }
+
+  card.style.display='block';
+}
+
 function updateBadge(data){
   if(!data) return;
   const cur=data.current||data;
@@ -291,25 +341,6 @@ function updateBadge(data){
   qs('#statsBadge').textContent=`${data.mode||'-'} | الإجمالي: ${t} | غائب: ${a} | حاضر: ${p}`;
   updateComparison(data);
   if(data.statuses) renderStatuses(data.statuses);
-}
-function updateComparison(data){
-  const card=qs('#comparisonCard');const comp=qs('#statsComparison');
-  if(data.morning&&data.emergency){
-    const m=data.morning.absent||0, e=data.emergency.absent||0, diff=m-e;
-    qs('#morningAbsent').textContent=`${m} غائب`;
-    qs('#emergencyAbsent').textContent=`${e} غائب`;
-    qs('#differenceAbsent').textContent=Math.abs(diff);
-    qs('#differenceAbsent').className=`stat-value ${diff>0?'diff-positive':diff<0?'diff-negative':'diff-zero'}`;
-    let st='-';
-    if(diff>0){st=`زيادة ${diff} في الحصة الأولى`;qs('#differenceStatus').className='stat-value diff-positive'}
-    else if(diff<0){st=`زيادة ${Math.abs(diff)} في الحالة الطارئة`;qs('#differenceStatus').className='stat-value diff-negative'}
-    else {st='متماثل';qs('#differenceStatus').className='stat-value diff-zero'}
-    qs('#differenceStatus').textContent=st;
-    card.style.display='block';
-    qs('#comparisonText').textContent=data.comparison?.summary||
-      `الحصة الأولى: ${m} غائب | الحالة الطارئة: ${e} غائب | الفرق: ${diff}`;
-    comp.style.display='block';
-  }
 }
 
 // متابعة الصفوف
@@ -336,9 +367,6 @@ async function onGradeSelected(grade){
     return;
   }
   showLoading('جاري تحميل بيانات الصف...');
-  qs('#empty').textContent='جاري تحميل الطلاب...'; qs('#empty').className='empty-state';
-
-  // ensureBaselineOnGrade
   const res = await apiCall('ensureBaselineOnGrade',{ grade });
   if(!res || res.error){ showToast('❌ حدث خطأ في تحميل الصف'); hideLoading(); return; }
   updateBadge(res);
@@ -384,7 +412,7 @@ function renderList(){
     const tag=document.createElement('span'); tag.className='tag';
     tag.textContent=st.state==='غائب'?'غائب':'حاضر';
     tag.style.background=st.state==='غائب'?'#fee2e2':'#d1fae5';
-    tag.style.color=st.state==='غائب'?'#dc2626':'#065f46';
+    tag.style.color=st.state==='غائب'?'#991b1b':'#065f46';
     tag.style.borderColor=st.state==='غائب'?'#fecaca':'#a7f3d0';
     item.appendChild(checkbox); item.appendChild(info); item.appendChild(tag);
     list.appendChild(item);
@@ -392,13 +420,12 @@ function renderList(){
 }
 
 function updateSelectionCount(){
-  const save=qs('#saveBulkBtn'); const redo=qs('#redoBtn');
+  const save=qs('#saveBulkBtn');
   const count=SELECTED_ROWS.size;
   if(save) save.textContent= count>0? `💾 حفظ (${count} غائب)` : `💾 حفظ (الكل حاضر)`;
-  if(redo) redo.textContent= count>0? `🔄 إعادة (${count} غائب)` : `🔄 إعادة (الكل حاضر)`;
 }
 
-// حفظ وإعادة
+// حفظ
 async function saveBulk(){
   const grade=CURRENT_GRADE; if(!grade){showToast('❌ اختر صفًا أولاً');return;}
   showLoading('جاري تسجيل الغياب...');
@@ -410,21 +437,6 @@ async function saveBulk(){
     showToast(msg,true); updateBadge(res); fadeOutListAndReset();
   }else{
     showToast('❌ حدث خطأ في الحفظ: '+(res?.message||res?.error||'غير معروف'));
-  }
-  hideLoading();
-}
-async function redoAttendance(){
-  const grade=CURRENT_GRADE; if(!grade){showToast('❌ اختر صفًا أولاً');return;}
-  if(!confirm('⚠️ هل تريد إعادة تسجيل الغياب لهذا الصف؟ سيتم مسح التسجيلات السابقة.')) return;
-  showLoading('جاري إعادة التسجيل...');
-  const absentRows=[...SELECTED_ROWS];
-  const res = await apiCall('redoGradeAttendance',{ grade, absentRows });
-  if(res?.ok){
-    const msg= absentRows.length>0? `✅ تم إعادة التسجيل: ${res.presentCount||0} حاضر, ${res.absentCount||0} غائب`
-                                  : `✅ تم إعادة تسجيل حضور للصف كاملاً (${res.presentCount||0} طالب)`;
-    showToast(msg,true); updateBadge(res); fadeOutListAndReset();
-  }else{
-    showToast('❌ حدث خطأ في إعادة التسجيل: '+(res?.message||res?.error||'غير معروف'));
   }
   hideLoading();
 }
@@ -515,11 +527,9 @@ qs('#mode').addEventListener('change', async e=>{
   hideLoading();
 });
 qs('#saveBulkBtn').addEventListener('click', saveBulk);
-qs('#redoBtn').addEventListener('click', redoAttendance);
 qs('#showAbsentsBtn').addEventListener('click', showAbsentsAll);
 qs('#showAbsentsBtnFooter').addEventListener('click', showAbsentsAll);
 qs('#clearMarksBtn').addEventListener('click', openPasswordModal);
-// Enter لتأكيد الرمز
 document.addEventListener('keypress', e=>{ if(e.key==='Enter' && qs('#passwordModal').style.display==='flex'){ confirmClearMarks(); }});
 </script>
 </body>
