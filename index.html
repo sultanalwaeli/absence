@@ -47,11 +47,8 @@ input[type="checkbox"]{transform:scale(1.3);margin:0;accent-color:var(--brand)}
 @keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
 .empty-state{text-align:center;padding:40px 20px;color:#64748b;font-size:16px}
 .empty-state.success{background:#f0fdf4;border:2px solid #bbf7d0;border-radius:12px;color:#15803d}
-.instructions{background:#f0f9ff;border:1px solid #bae6fd;border-radius:12px;padding:12px;margin-bottom:12px;font-size:14px;color:#0369a1}
-.instructions ul{margin:8px 0;padding-right:20px}
-.instructions li{margin-bottom:4px}
 
-/* بطاقة المقارنة مع المؤشرات الدائرية */
+/* بطاقة المقارنة مع مؤشرات دائرية */
 .compare{background:#fff7ed;border:1px solid #fed7aa;border-radius:16px;padding:12px;margin-bottom:10px}
 .compare-title{display:flex;align-items:center;gap:8px;font-weight:800;color:#9a3412}
 .compare-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:8px}
@@ -62,9 +59,7 @@ input[type="checkbox"]{transform:scale(1.3);margin:0;accent-color:var(--brand)}
 .badge.green{background:#dcfce7;color:#166534;border:1px solid #86efac}
 .badge.red{background:#fee2e2;color:#991b1b;border:1px solid #fecaca}
 .badge.gray{background:#f3f4f6;color:#374151;border:1px solid #e5e7eb}
-.circle{--p:0;--c:#10b981;width:84px;height:84px;border-radius:50%;background:
-  conic-gradient(var(--c) calc(var(--p)*1%), #e5e7eb 0);
-  display:grid;place-items:center;font-weight:900;color:#111827}
+.circle{--p:0;--c:#10b981;width:84px;height:84px;border-radius:50%;background:conic-gradient(var(--c) calc(var(--p)*1%), #e5e7eb 0);display:grid;place-items:center;font-weight:900;color:#111827}
 .circle small{display:block;font-weight:600;color:#6b7280}
 .circle-wrap{display:flex;align-items:center;gap:10px}
 .circle-abs{--c:#ef4444}
@@ -121,9 +116,7 @@ input[type="checkbox"]{transform:scale(1.3);margin:0;accent-color:var(--brand)}
   <!-- مقارنة الإحصاءات -->
   <div id="comparisonCard" class="compare" style="display:none">
     <div class="compare-title">📊 مقارنة إحصاءات الغياب والحضور</div>
-
     <div class="compare-grid">
-      <!-- الحصة الأولى -->
       <div class="compare-card">
         <div class="kpi"><span class="label">الحصة الأولى</span><span id="kpi-mor-abs" class="badge red">0 غائب</span></div>
         <div class="circle-wrap">
@@ -135,8 +128,6 @@ input[type="checkbox"]{transform:scale(1.3);margin:0;accent-color:var(--brand)}
           <span class="badge gray"  id="kpi-mor-total">0 إجمالي</span>
         </div>
       </div>
-
-      <!-- الحالة الطارئة -->
       <div class="compare-card">
         <div class="kpi"><span class="label">الحالة الطارئة</span><span id="kpi-em-abs" class="badge red">0 غائب</span></div>
         <div class="circle-wrap">
@@ -148,8 +139,6 @@ input[type="checkbox"]{transform:scale(1.3);margin:0;accent-color:var(--brand)}
           <span class="badge gray"  id="kpi-em-total">0 إجمالي</span>
         </div>
       </div>
-
-      <!-- الفروقات -->
       <div class="compare-card">
         <div class="kpi"><span class="label">الفرق في الغياب</span><span id="kpi-diff-abs" class="badge gray">0</span></div>
         <div class="kpi"><span class="label">فرق نسبة الغياب</span><span id="kpi-diff-rate" class="badge gray">0%</span></div>
@@ -157,17 +146,6 @@ input[type="checkbox"]{transform:scale(1.3);margin:0;accent-color:var(--brand)}
         <div class="kpi"><span class="label">الحالة</span><span id="differenceStatus" class="badge gray">متماثل</span></div>
       </div>
     </div>
-  </div>
-
-  <!-- تعليمات -->
-  <div class="instructions">
-    <strong>طريقة الاستخدام:</strong>
-    <ul>
-      <li>اختر الصف من “متابعة الصفوف”.</li>
-      <li>حدّد الطلاب الغائبين بمربعات الاختيار.</li>
-      <li>اضغط “💾 حفظ الغياب المحدد”.</li>
-      <li>زر “عرض الغائبين” يعرض كل الغياب في الوضع الحالي.</li>
-    </ul>
   </div>
 
   <!-- متابعة الصفوف -->
@@ -185,7 +163,7 @@ input[type="checkbox"]{transform:scale(1.3);margin:0;accent-color:var(--brand)}
         <option value="حالة طارئة">حالة طارئة</option>
       </select>
       <button class="btn secondary" id="showAbsentsBtn" type="button" style="width:100%">👀 عرض الغائبين</button>
-      <button class="btn secondary" id="exportCsvBtn" type="button" style="width:100%">📤 تصدير الغائبين (CSV)</button>
+      <button class="btn secondary" id="exportPdfBtn" type="button" style="width:100%">📄 تنزيل الغائبين PDF</button>
     </div>
 
     <div id="gradeActions" class="grade-actions" style="display:none">
@@ -214,32 +192,50 @@ input[type="checkbox"]{transform:scale(1.3);margin:0;accent-color:var(--brand)}
 
 <script>
 // ========= إعداد API =========
-const API_URL = 'https://script.google.com/macros/s/AKfycbybvqOTEgQHYG7mwuOfMaS2VH1QlrHvlkwXqt1elhAJWBCrmmLddYhMynMkmmAp_NsF/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbxdxeQO_Nt8N0jNF-QkALUzbZNmoRZBCgpyidLVNJksYMpNe7OBfLHXGGwpOeZasgya/exec';
 
-// استدعاء API مع مهلة وحماية من الردود غير-JSON
+// استدعاء API: 3 محاولات + Backoff + مهلة 20s + كشف الردود غير-JSON
 async function apiCall(action, payload = {}) {
-  const ctrl = new AbortController();
-  const t = setTimeout(() => ctrl.abort(), 15000); // 15 ثانية
+  const attempt = async () => {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 20000); // 20 ثانية
+    try {
+      const body = new URLSearchParams({ action, data: JSON.stringify(payload) });
+      const res = await fetch(API_URL + `?_ts=${Date.now()}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+        body,
+        cache: 'no-store',
+        signal: ctrl.signal,
+        redirect: 'follow',
+        credentials: 'omit',
+        mode: 'cors'
+      });
+      const text = await res.text();
+      clearTimeout(t);
 
-  try {
-    const body = new URLSearchParams({ action, data: JSON.stringify(payload) });
-    const res = await fetch(API_URL + `?_ts=${Date.now()}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-      body,
-      cache: 'no-store',
-      signal: ctrl.signal
-    });
-    const text = await res.text();
-    clearTimeout(t);
+      if (!res.ok) return { ok:false, error:`HTTP ${res.status}: ${text.slice(0,200)}` };
+      try { return JSON.parse(text); }
+      catch { 
+        if (/<!doctype html>|<html/i.test(text)) {
+          return { ok:false, error:'Non-JSON (login page) — تأكد من صلاحيات النشر Anyone.' };
+        }
+        return { ok:false, error:'Non-JSON response: ' + text.slice(0,200) }; 
+      }
+    } catch (err) {
+      clearTimeout(t);
+      return { ok:false, error:'Network/Timeout: ' + String(err) };
+    }
+  };
 
-    if (!res.ok) return { ok:false, error:`HTTP ${res.status}: ${text.slice(0,200)}` };
-    try { return JSON.parse(text); }
-    catch { return { ok:false, error:'Non-JSON response: ' + text.slice(0,200) }; }
-  } catch (err) {
-    clearTimeout(t);
-    return { ok:false, error:'Network/Timeout: ' + String(err) };
-  }
+  let resp = await attempt();
+  if (resp && resp.ok !== false && !resp.error) return resp;
+  await new Promise(r=>setTimeout(r,300));
+  resp = await attempt();
+  if (resp && resp.ok !== false && !resp.error) return resp;
+  await new Promise(r=>setTimeout(r,900));
+  resp = await attempt();
+  return resp;
 }
 
 // ========= أدوات واجهة =========
@@ -247,13 +243,12 @@ const qs = s => document.querySelector(s);
 let CURRENT_LIST = [];
 let SELECTED_ROWS = new Set();
 let CURRENT_GRADE = '';
+let BUSY = false;
 
-// صوت & توست
 function playSuccessSound(){try{const c=new (window.AudioContext||window.webkitAudioContext)();const o=c.createOscillator();const g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.setValueAtTime(800,c.currentTime);o.frequency.setValueAtTime(1000,c.currentTime+.1);o.frequency.setValueAtTime(1200,c.currentTime+.2);g.gain.setValueAtTime(.3,c.currentTime);g.gain.exponentialRampToValueAtTime(.01,c.currentTime+.3);o.start(c.currentTime);o.stop(c.currentTime+.3);}catch(e){}}
 function createConfetti(){try{const colors=['#ffd700','#ff6b6b','#4ecdc4','#45b7d1','#96ceb4','#feca57'];for(let i=0;i<20;i++){const d=document.createElement('div');d.className='confetti';d.style.left=Math.random()*100+'vw';d.style.background=colors[Math.floor(Math.random()*colors.length)];d.style.animationDelay=Math.random()*1+'s';d.style.width='8px';d.style.height='8px';document.body.appendChild(d);setTimeout(()=>d.remove(),3000);}}catch(e){}}
 const showToast=(msg,isSuccess=false)=>{const t=qs('#toast');if(!t)return;t.textContent=msg;t.className=isSuccess?'toast success-toast':'toast';t.style.display='block';t.style.animation='none';setTimeout(()=>{t.style.animation=''},10);if(isSuccess){playSuccessSound();createConfetti();}setTimeout(()=>{t.style.display='none'},3000);};
 
-// تحميل
 function showLoading(m='جاري تحميل البيانات...'){const ov=qs('#loadingOverlay');ov.querySelector('.loading-spinner div:last-child').textContent=m;ov.style.display='flex';document.body.classList.add('loading');}
 function hideLoading(){qs('#loadingOverlay').style.display='none';document.body.classList.remove('loading')}
 
@@ -272,21 +267,18 @@ function updateComparison(data){
   const mAbsRate = pct(m.absent, m.total), eAbsRate = pct(e.absent, e.total);
   const mPresRate = pct(mPres, m.total),   ePresRate = pct(ePres, e.total);
 
-  // الحصة الأولى
   qs('#kpi-mor-abs').textContent = `${m.absent||0} غائب`;
   qs('#kpi-mor-pres').textContent = `${mPres} حاضر`;
   qs('#kpi-mor-total').textContent = `${m.total||0} إجمالي`;
   setCircle(qs('#circle-mor-abs'), mAbsRate); qs('#circle-mor-abs-txt').textContent = mAbsRate+'%';
   setCircle(qs('#circle-mor-pres'), mPresRate); qs('#circle-mor-pres-txt').textContent = mPresRate+'%';
 
-  // الحالة الطارئة
   qs('#kpi-em-abs').textContent = `${e.absent||0} غائب`;
   qs('#kpi-em-pres').textContent = `${ePres} حاضر`;
   qs('#kpi-em-total').textContent = `${e.total||0} إجمالي`;
   setCircle(qs('#circle-em-abs'), eAbsRate); qs('#circle-em-abs-txt').textContent = eAbsRate+'%';
   setCircle(qs('#circle-em-pres'), ePresRate); qs('#circle-em-pres-txt').textContent = ePresRate+'%';
 
-  // الفروقات
   const diffAbs = (m.absent||0) - (e.absent||0);
   const diffRate = mAbsRate - eAbsRate;
   const diffPresRate = mPresRate - ePresRate;
@@ -324,34 +316,32 @@ function renderStatuses(statuses){
 }
 
 async function onGradeSelected(grade){
+  if (BUSY) return;
+  BUSY = true;
+
   CURRENT_GRADE=grade;
   const actions=qs('#gradeActions'); if(actions){actions.style.display= grade? 'flex':'none'}
+
   const list=qs('#list'), empty=qs('#empty');
-  // إعادة تهيئة واجهة القائمة دومًا
   list.style.display='none'; list.innerHTML='';
   empty.style.display='block'; empty.textContent='جاري تحميل الطلاب...'; empty.className='empty-state';
 
-  if(!grade){ empty.textContent='اختر الصف لتحميل الأسماء...'; return; }
+  if(!grade){ empty.textContent='اختر الصف لتحميل الأسماء...'; BUSY=false; return; }
 
   showLoading('جاري تحميل بيانات الصف...');
-  const res = await apiCall('ensureBaselineOnGrade',{ grade });
-  if(!res || res.error){ showToast('❌ حدث خطأ في تحميل الصف'); hideLoading(); return; }
-  updateBadge(res);
-  await loadGradeListOnly();
-  hideLoading();
-}
+  const res = await apiCall('getGradeBundle',{ grade });
+  if(!res || res.error){
+    showToast('❌ خطأ في التحميل: ' + (res && res.error || 'غير معروف'));
+    hideLoading(); BUSY=false; return;
+  }
 
-async function loadGradeListOnly(){
-  const grade=CURRENT_GRADE; if(!grade) return;
-  showLoading('جاري تحميل قائمة الطلاب...');
-  const listRes = await apiCall('getStudentsByGrade',{ grade });
-  const list=qs('#list'), empty=qs('#empty');
-  if(!Array.isArray(listRes)){ showToast('❌ خطأ في تحميل قائمة الطلاب'); empty.textContent='فشل التحميل'; hideLoading(); return; }
-  CURRENT_LIST = listRes;
+  updateBadge(res);
+  CURRENT_LIST = res.students || [];
   SELECTED_ROWS.clear();
   renderList();
   updateSelectionCount();
   hideLoading();
+  BUSY = false;
 }
 
 function renderList(){
@@ -407,7 +397,6 @@ async function saveBulk(){
                                   : `✅ تم تسجيل حضور للصف كاملاً (${res.presentCount||0} طالب)`;
     showToast(msg,true);
     updateBadge(res);
-    // تفريغ واجهة هذا الصف فقط — وسيتم ملؤها عند اختيار صف جديد
     const list=qs('#list'), empty=qs('#empty');
     list.style.display='none'; list.innerHTML='';
     empty.style.display='block'; empty.textContent='✅ تم الحفظ بنجاح! اختر صفًا آخر'; empty.className='empty-state success';
@@ -418,7 +407,7 @@ async function saveBulk(){
   hideLoading();
 }
 
-// ====== عرض/تصدير الغائبين ======
+// ====== عرض الغياب + تنزيل PDF ======
 async function showAbsentsAll(){
   showLoading('جاري تحميل قائمة الغائبين...');
   const res = await apiCall('listAbsentsAll',{});
@@ -436,22 +425,24 @@ async function showAbsentsAll(){
   box.style.display='block'; hideLoading();
 }
 
-async function exportAbsentsCsv(){
-  showLoading('جاري تجهيز ملف CSV...');
-  const res = await apiCall('listAbsentsAll',{});
-  const rows = [['الصف','الاسم','الرقم']];
-  (res?.byGrade||[]).forEach(g=>{
-    (g.names||[]).forEach(s=> rows.push([g.grade, s.name, s.id||'']));
-  });
-  const csv = rows.map(r=> r.map(x=> `"${String(x).replace(/"/g,'""')}"`).join(',')).join('\n');
-  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+async function exportAbsentsPdf(){
+  showLoading('جاري توليد ملف PDF...');
+  const res = await apiCall('absentsPdf',{});
+  hideLoading();
+  if (!res || !res.ok || !res.base64) {
+    showToast('❌ تعذر توليد PDF: ' + (res && res.error || 'غير معروف'));
+    return;
+  }
+  const byteChars = atob(res.base64);
+  const byteNumbers = new Array(byteChars.length);
+  for (let i = 0; i < byteChars.length; i++) byteNumbers[i] = byteChars.charCodeAt(i);
+  const blob = new Blob([new Uint8Array(byteNumbers)], { type: res.mime || 'application/pdf' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url; a.download = `absents-${new Date().toISOString().slice(0,10)}.csv`;
+  a.href = url; a.download = res.filename || `absents-${new Date().toISOString().slice(0,10)}.pdf`;
   document.body.appendChild(a); a.click(); a.remove();
   URL.revokeObjectURL(url);
-  hideLoading();
-  showToast('📤 تم تنزيل ملف الغائبين (CSV)', true);
+  showToast('📄 تم تنزيل ملف الغياب PDF', true);
 }
 
 // ====== الرمز السري ======
@@ -487,7 +478,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   if (!data || data.ok === false || data.error) {
     hideLoading();
     console.error('getInitial error:', data && data.error);
-    document.querySelector('#empty').textContent = 'تعذر الاتصال بالمخدم. تحقق من رابط الـAPI أو الصلاحيات.';
+    document.querySelector('#empty').textContent = 'تعذر الاتصال بالمخدّم. تحقق من رابط الـAPI أو الصلاحيات.';
     showToast('❌ تعذر الاتصال بالـAPI: ' + (data && data.error ? data.error : 'Unknown error'));
     return;
   }
@@ -503,17 +494,15 @@ qs('#mode').addEventListener('change', async e=>{
   const res = await apiCall('setMode',{ mode:e.target.value });
   if(!res || res.error){ showToast('❌ حدث خطأ في تغيير الوضع'); hideLoading(); return; }
   updateBadge(res);
-  if(CURRENT_GRADE){ await loadGradeListOnly(); }
+  if(CURRENT_GRADE){ await onGradeSelected(CURRENT_GRADE); }
   hideLoading();
 });
 qs('#saveBulkBtn').addEventListener('click', saveBulk);
 qs('#showAbsentsBtn').addEventListener('click', showAbsentsAll);
 qs('#showAbsentsBtnFooter').addEventListener('click', showAbsentsAll);
-qs('#exportCsvBtn').addEventListener('click', exportAbsentsCsv);
+qs('#exportPdfBtn').addEventListener('click', exportAbsentsPdf);
 qs('#clearMarksBtn').addEventListener('click', openPasswordModal);
 document.addEventListener('keypress', e=>{ if(e.key==='Enter' && qs('#passwordModal').style.display==='flex'){ confirmClearMarks(); }});
 </script>
 </body>
 </html>
-
-
