@@ -158,7 +158,7 @@ input[type="checkbox"]{transform:scale(1.3);margin:0;accent-color:var(--brand)}
       <li>اختر الصف من “متابعة الصفوف”.</li>
       <li>حدّد الطلاب الغائبين بمربعات الاختيار.</li>
       <li>اضغط “💾 حفظ الغياب المحدد”.</li>
-      <li>زر “عرض الغائبين” يعرض كل الغياب في الوضع الحالي.</li>
+      <li>زر “عرض الغائبين” سيُظهر كل الغياب ويتيح تنزيل **PDF**.</li>
     </ul>
   </div>
 
@@ -177,7 +177,7 @@ input[type="checkbox"]{transform:scale(1.3);margin:0;accent-color:var(--brand)}
         <option value="حالة طارئة">حالة طارئة</option>
       </select>
       <button class="btn secondary" id="showAbsentsBtn" type="button" style="width:100%">👀 عرض الغائبين</button>
-      <button class="btn secondary" id="exportCsvBtn" type="button" style="width:100%">📤 تصدير الغائبين (CSV)</button>
+      <button class="btn secondary" id="exportPdfBtn" type="button" style="width:100%">📄 تنزيل الغائبين PDF</button>
     </div>
 
     <div id="gradeActions" class="grade-actions" style="display:none">
@@ -206,32 +206,52 @@ input[type="checkbox"]{transform:scale(1.3);margin:0;accent-color:var(--brand)}
 
 <script>
 // ========= إعداد API =========
-const API_URL = 'https://script.google.com/macros/s/AKfycbw-RTR-FPWRjAqjIkyAggigGlehCLpkNnslsUmeV1YyCGFHiZ11pVoBXfXhJwj-1-d0/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbw_NrgPy2P7Q_n7h9I74g59MKtNMxVUNmgX17bFltBoncFAaxeNwPhwI-qE68-K4bI/exec';
 
-// استدعاء API مع مهلة وحماية من الردود غير-JSON
+// استدعاء API: 3 محاولات + Backoff + مهلة 20s + كشف الردود غير-JSON
 async function apiCall(action, payload = {}) {
-  const ctrl = new AbortController();
-  const t = setTimeout(() => ctrl.abort(), 20000); // 20 ثانية
+  const attempt = async () => {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 20000); // 20 ثانية
+    try {
+      const body = new URLSearchParams({ action, data: JSON.stringify(payload) });
+      const res = await fetch(API_URL + `?_ts=${Date.now()}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+        body,
+        cache: 'no-store',
+        signal: ctrl.signal,
+        redirect: 'follow',
+        credentials: 'omit',
+        mode: 'cors'
+      });
+      const text = await res.text();
+      clearTimeout(t);
 
-  try {
-    const body = new URLSearchParams({ action, data: JSON.stringify(payload) });
-    const res = await fetch(API_URL + `?_ts=${Date.now()}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-      body,
-      cache: 'no-store',
-      signal: ctrl.signal
-    });
-    const text = await res.text();
-    clearTimeout(t);
+      if (!res.ok) return { ok:false, error:`HTTP ${res.status}: ${text.slice(0,200)}` };
+      try { return JSON.parse(text); }
+      catch { 
+        // احتمال صفحة تسجيل دخول HTML
+        if (/<!doctype html>|<html/i.test(text)) {
+          return { ok:false, error:'Non-JSON (login page) — تأكد من صلاحيات النشر Anyone.' };
+        }
+        return { ok:false, error:'Non-JSON response: ' + text.slice(0,200) }; 
+      }
+    } catch (err) {
+      clearTimeout(t);
+      return { ok:false, error:'Network/Timeout: ' + String(err) };
+    }
+  };
 
-    if (!res.ok) return { ok:false, error:`HTTP ${res.status}: ${text.slice(0,200)}` };
-    try { return JSON.parse(text); }
-    catch { return { ok:false, error:'Non-JSON response: ' + text.slice(0,200) }; }
-  } catch (err) {
-    clearTimeout(t);
-    return { ok:false, error:'Network/Timeout: ' + String(err) };
-  }
+  // 3 محاولات مع backoff (0ms, 300ms, 900ms)
+  let resp = await attempt();
+  if (resp && resp.ok !== false && !resp.error) return resp;
+  await new Promise(r=>setTimeout(r,300));
+  resp = await attempt();
+  if (resp && resp.ok !== false && !resp.error) return resp;
+  await new Promise(r=>setTimeout(r,900));
+  resp = await attempt();
+  return resp;
 }
 
 // ========= أدوات واجهة =========
@@ -345,20 +365,6 @@ async function onGradeSelected(grade){
   BUSY = false;
 }
 
-async function loadGradeListOnly(){
-  // لم نعد نحتاجها غالبًا بوجود getGradeBundle، لكن نتركها احتياطًا
-  if(!CURRENT_GRADE) return;
-  showLoading('جاري تحميل قائمة الطلاب...');
-  const listRes = await apiCall('getStudentsByGrade',{ grade: CURRENT_GRADE });
-  const list=qs('#list'), empty=qs('#empty');
-  if(!Array.isArray(listRes)){ showToast('❌ خطأ في تحميل قائمة الطلاب'); empty.textContent='فشل التحميل'; hideLoading(); return; }
-  CURRENT_LIST = listRes;
-  SELECTED_ROWS.clear();
-  renderList();
-  updateSelectionCount();
-  hideLoading();
-}
-
 function renderList(){
   const list=qs('#list'), empty=qs('#empty');
   list.innerHTML='';
@@ -422,7 +428,7 @@ async function saveBulk(){
   hideLoading();
 }
 
-// ====== عرض/تصدير الغائبين ======
+// ====== عرض الغياب + تنزيل PDF ======
 async function showAbsentsAll(){
   showLoading('جاري تحميل قائمة الغائبين...');
   const res = await apiCall('listAbsentsAll',{});
@@ -439,22 +445,25 @@ async function showAbsentsAll(){
   });
   box.style.display='block'; hideLoading();
 }
-async function exportAbsentsCsv(){
-  showLoading('جاري تجهيز ملف CSV...');
-  const res = await apiCall('listAbsentsAll',{});
-  const rows = [['الصف','الاسم','الرقم']];
-  (res?.byGrade||[]).forEach(g=>{
-    (g.names||[]).forEach(s=> rows.push([g.grade, s.name, s.id||'']));
-  });
-  const csv = rows.map(r=> r.map(x=> `"${String(x).replace(/"/g,'""')}"`).join(',')).join('\n');
-  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+
+async function exportAbsentsPdf(){
+  showLoading('جاري توليد ملف PDF...');
+  const res = await apiCall('absentsPdf',{});
+  hideLoading();
+  if (!res || !res.ok || !res.base64) {
+    showToast('❌ تعذر توليد PDF: ' + (res && res.error || 'غير معروف'));
+    return;
+  }
+  const byteChars = atob(res.base64);
+  const byteNumbers = new Array(byteChars.length);
+  for (let i = 0; i < byteChars.length; i++) byteNumbers[i] = byteChars.charCodeAt(i);
+  const blob = new Blob([new Uint8Array(byteNumbers)], { type: res.mime || 'application/pdf' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url; a.download = `absents-${new Date().toISOString().slice(0,10)}.csv`;
+  a.href = url; a.download = res.filename || `absents-${new Date().toISOString().slice(0,10)}.pdf`;
   document.body.appendChild(a); a.click(); a.remove();
   URL.revokeObjectURL(url);
-  hideLoading();
-  showToast('📤 تم تنزيل ملف الغائبين (CSV)', true);
+  showToast('📄 تم تنزيل ملف الغياب PDF', true);
 }
 
 // ====== الرمز السري ======
@@ -506,18 +515,16 @@ qs('#mode').addEventListener('change', async e=>{
   const res = await apiCall('setMode',{ mode:e.target.value });
   if(!res || res.error){ showToast('❌ حدث خطأ في تغيير الوضع'); hideLoading(); return; }
   updateBadge(res);
-  if(CURRENT_GRADE){ await onGradeSelected(CURRENT_GRADE); } // يعيد تحميل الحزمة مرة واحدة
+  if(CURRENT_GRADE){ await onGradeSelected(CURRENT_GRADE); }
   hideLoading();
 });
 qs('#saveBulkBtn').addEventListener('click', saveBulk);
 qs('#showAbsentsBtn').addEventListener('click', showAbsentsAll);
 qs('#showAbsentsBtnFooter').addEventListener('click', showAbsentsAll);
-qs('#exportCsvBtn').addEventListener('click', exportAbsentsCsv);
+qs('#exportPdfBtn').addEventListener('click', exportAbsentsPdf);
 qs('#clearMarksBtn').addEventListener('click', openPasswordModal);
 document.addEventListener('keypress', e=>{ if(e.key==='Enter' && qs('#passwordModal').style.display==='flex'){ confirmClearMarks(); }});
 </script>
 </body>
 </html>
-
-
 
